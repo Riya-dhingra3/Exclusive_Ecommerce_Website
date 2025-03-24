@@ -53,7 +53,7 @@ const Header = () => {
       </div>
 
       {/* 🔹 Main Header */}
-      <div className="flex flex-wrap justify-between items-center px-4 py-4 md:py-6 mt-8">
+      <div className="flex justify-between items-center md:py-6 mt-8 lg:container container mx-auto">
         {/* 🔹 Logo */}
         <div className="font-bold text-lg md:text-xl">
           <a href="/">Exclusive</a>
