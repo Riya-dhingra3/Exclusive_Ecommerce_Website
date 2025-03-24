@@ -4,6 +4,9 @@ import img from '../assets/Product1.png';
 import carosel_images1 from '../assets/curosel_image1.png';
 import Card from './Card';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import Category from './Category';
+import { categories } from './Category_data';
+import Hero_section from './Hero_section';
 
 const Home = () => {
   const settings = {
@@ -79,7 +82,48 @@ const Home = () => {
       image: img
     },
   ];
-
+  const products1 = [
+    {
+      id: 1,
+      name: "HAVIT HV-G92 Gamepad",
+      price: 120,
+      originalPrice: 160,
+      discount: 40,
+      rating: 5,
+      reviews: 88,
+      image: img
+    },
+    {
+      id: 2,
+      name: "AK-900 Wired Keyboard",
+      price: 960,
+      originalPrice: 1160,
+      discount: 35,
+      rating: 4,
+      reviews: 75,
+      image: img
+    },
+    {
+      id: 3,
+      name: "AK-900 Wired Keyboard",
+      price: 960,
+      originalPrice: 1160,
+      discount: 35,
+      rating: 4,
+      reviews: 75,
+      image: img
+    },
+    {
+      id: 4,
+      name: "AK-900 Wired Keyboard",
+      price: 960,
+      originalPrice: 1160,
+      discount: 35,
+      rating: 4,
+      reviews: 75,
+      image: img
+    }
+  ]
   const [currentIndex, setCurrentIndex] = useState(0);
   const cardsPerPage = 4;
 
@@ -144,6 +188,9 @@ const Home = () => {
 
       {/* Flash Sales Section */}
       <div className='container mx-auto mt-16 mb-16'>
+        <div className='flex justify-between items-center'>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Today's</p>
+        </div>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold">Flash Sales</h2>
           <div className="flex gap-4">
@@ -169,7 +216,7 @@ const Home = () => {
           <div
             className="flex gap-6 w-max" // w-max ensures cards don't shrink
             style={{
-              transform: `translateX(-${currentIndex * (270 + 24)}px)`,
+              transform: `translateX(-${currentIndex * (270 + 100)}px)`,
               transition: 'transform 0.5s ease-in-out'
             }}
           >
@@ -189,7 +236,67 @@ const Home = () => {
             ))}
           </div>
         </div>
+        <div className="w-[100%] border-t border-gray-300 mt-[8%]"></div>
+        <div className='container mx-auto mt-[8%]'>
+        <div className='flex justify-between items-center'>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Categories</p>
+        </div>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold">Browse By Category</h2>
+        </div>
+
+        {/* Fixed width container to show exactly 4 cards */}
+        <div className="max-w-[1200px] mx-auto overflow-hidden">
+          <div
+            className="flex gap-6 w-max container mx-auto" 
+          >
+            {categories.map(category => (
+              <div className="w-[140px] hover:bg-red-500 hover:text-white"> {/* Fixed width wrapper */}
+                <Category
+                  key={category.id}
+                  name={category.name}
+                  image={category.image}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+      <div className="w-[100%] border-t border-gray-300 mt-[8%]"></div>
+      </div>
+      <div className='container mx-auto mt-[8%]'>
+        <div className='flex justify-between items-center'>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>This Month</p>
+        </div>
+        <div className="flex justify-between items-center mb-8">
+          <div><h2 className="text-2xl font-bold">Best Selling Products</h2>
+          </div>
+          <div>
+            <button className='bg-red-500 text-white px-4 py-2 rounded-md'>View All</button>
+          </div>
+        </div>
+        <div className="max-w-[1200px] mx-auto overflow-hidden">
+          <div
+            className="flex gap-6 w-max container mx-auto" 
+          >
+            {products1.map(product => (
+              <div key={product.id} className="w-[23.6%] flex-shrink-0">
+                <Card
+                  name={product.name}
+                  price={product.price}
+                  originalPrice={product.originalPrice}
+                  rating={product.rating}
+                  reviews={product.reviews}
+                  image={product.image}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        </div>
+        <div className="container mx-auto bg-black w-full relative mt-[10%] mb-[10%]">
+          <Hero_section/>
+        </div>
     </>
   );
 };

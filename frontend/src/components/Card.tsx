@@ -2,22 +2,37 @@ import React, { useState } from "react";
 import { AiOutlineHeart, AiOutlineEye } from 'react-icons/ai';
 import { FaStar } from 'react-icons/fa';
 
+interface CardProps {
+    name: string;
+    price: number;
+    originalPrice: number;
+    discount?: number;
+    rating: number;
+    reviews: number;
+    image: string;
+}
 
-const Card = ({ name, price, originalPrice, discount, rating, reviews, image }) => {
+const Card: React.FC<CardProps> = ({
+    name,
+    price,
+    originalPrice,
+    discount,
+    rating,
+    reviews,
+    image
+}) => {
     const [showAddToCart, setShowAddToCart] = useState(false);
-
-    const handleImageClick = () => {
-        setShowAddToCart(!showAddToCart);
-    };
 
     return (
         <div className="w-full max-w-[270px]">
             {/* Product Image Container */}
             <div className="relative bg-[#F5F5F5] rounded-lg p-8 mb-4 overflow-hidden">
                 {/* Discount Badge */}
-                <div className="absolute top-3 left-3 bg-[#DB4444] text-white px-3 py-1 rounded z-10">
-                    -40%
-                </div>
+                {discount !== undefined && discount > 0 && (
+                    <div className="absolute top-3 left-3 bg-[#DB4444] text-white px-3 py-1 rounded z-10">
+                        -{discount}%
+                    </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="absolute top-3 right-3 flex flex-col gap-2 ">
@@ -30,7 +45,7 @@ const Card = ({ name, price, originalPrice, discount, rating, reviews, image }) 
                 </div>
 
                 {/* Product Image with Click Handler */}
-                <div className="relative cursor-pointer" onClick={handleImageClick}>
+                <div className="relative cursor-pointer" onMouseEnter={()=>setShowAddToCart(true)} onMouseLeave={()=>setShowAddToCart(false)}>
                     <img
                         src={image}
                         alt="Product"
