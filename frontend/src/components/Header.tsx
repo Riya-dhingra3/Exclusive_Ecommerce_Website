@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   return (
-    <div className="w-[100%]">
+    <div >
       {/* 🔹 Top Bar */}
       <div className="fixed top-0 left-0 w-full flex flex-wrap justify-evenly items-center bg-black text-white h-8 md:h-10 px-4 z-50">
         <p className="text-xs md:text-sm text-center w-full md:w-auto">
@@ -53,7 +53,7 @@ const Header = () => {
       </div>
 
       {/* 🔹 Main Header */}
-      <div className="flex justify-between items-center md:py-6 mt-8 lg:container container mx-auto">
+      <div className="flex justify-between items-center md:py-6 mt-8 lg:max-w-[85%] container mx-auto">
         {/* 🔹 Logo */}
         <div className="font-bold text-lg md:text-xl">
           <a href="/">Exclusive</a>

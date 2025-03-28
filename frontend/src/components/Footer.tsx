@@ -6,7 +6,7 @@ import AppStore from '../assets/AppStore.jpg';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-black text-white pt-16 pb-4">
+        <footer className="bg-black text-white pt-16 pb-4 mt-[4%]">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-12">
                 {/* Exclusive Section */}
                 <div className="space-y-5">

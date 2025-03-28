@@ -137,7 +137,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="w-full flex justify-between container mx-auto">
+      <div className="w-full flex justify-between lg:max-w-[85%] container mx-auto">
         <div className='mt-[3%] flex flex-col gap-4 text-left '>
           <div>
             Woman's Fashion
@@ -187,7 +187,7 @@ const Home = () => {
       </div>
 
       {/* Flash Sales Section */}
-      <div className='container mx-auto mt-16 mb-16'>
+      <div className='container mx-auto mt-16 mb-16 lg:max-w-[85%]'>
         <div className='flex justify-between items-center'>
           <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Today's</p>
         </div>
@@ -238,33 +238,33 @@ const Home = () => {
         </div>
         <div className="w-[100%] border-t border-gray-300 mt-[8%]"></div>
         <div className='container mx-auto mt-[8%]'>
-        <div className='flex justify-between items-center'>
-          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Categories</p>
-        </div>
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold">Browse By Category</h2>
-        </div>
+          <div className='flex justify-between items-center'>
+            <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Categories</p>
+          </div>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">Browse By Category</h2>
+          </div>
 
-        {/* Fixed width container to show exactly 4 cards */}
-        <div className="max-w-[1200px] mx-auto overflow-hidden">
-          <div
-            className="flex gap-6 w-max container mx-auto" 
-          >
-            {categories.map(category => (
-              <div className="w-[140px] hover:bg-red-500 hover:text-white"> {/* Fixed width wrapper */}
-                <Category
-                  key={category.id}
-                  name={category.name}
-                  image={category.image}
-                />
-              </div>
-            ))}
+          {/* Fixed width container to show exactly 4 cards */}
+          <div className="max-w-[1200px] mx-auto overflow-hidden">
+            <div
+              className="flex gap-6 w-max container mx-auto"
+            >
+              {categories.map(category => (
+                <div className="w-[140px] hover:bg-red-500 hover:text-white"> {/* Fixed width wrapper */}
+                  <Category
+                    key={category.id}
+                    name={category.name}
+                    image={category.image}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+        <div className="w-[100%] border-t border-gray-300 mt-[8%]"></div>
       </div>
-      <div className="w-[100%] border-t border-gray-300 mt-[8%]"></div>
-      </div>
-      <div className='container mx-auto mt-[8%]'>
+      <div className='container mx-auto mt-[8%] lg:max-w-[85%]'>
         <div className='flex justify-between items-center'>
           <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>This Month</p>
         </div>
@@ -277,10 +277,10 @@ const Home = () => {
         </div>
         <div className="max-w-[1200px] mx-auto overflow-hidden">
           <div
-            className="flex gap-6 w-max container mx-auto" 
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           >
             {products1.map(product => (
-              <div key={product.id} className="w-[23.6%] flex-shrink-0">
+              <div key={product.id}>
                 <Card
                   name={product.name}
                   price={product.price}
@@ -293,10 +293,39 @@ const Home = () => {
             ))}
           </div>
         </div>
+      </div>
+      <div className="container mx-auto bg-black w-full relative mt-[10%] mb-[10%] lg:max-w-[85%]">
+        <Hero_section />
+      </div>
+      <div className='container mx-auto mt-[8%] lg:max-w-[85%]'>
+        <div className='flex justify-between items-center'>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>This Month</p>
         </div>
-        <div className="container mx-auto bg-black w-full relative mt-[10%] mb-[10%]">
-          <Hero_section/>
+        <div className="flex justify-between items-center mb-8">
+          <div><h2 className="text-2xl font-bold">Best Selling Products</h2>
+          </div>
+          <div>
+            <button className='bg-red-500 text-white px-4 py-2 rounded-md'>View All</button>
+          </div>
         </div>
+        <div className="max-w-[1200px] mx-auto overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="w-full">
+                <Card
+                  name={product.name}
+                  price={product.price}
+                  originalPrice={product.originalPrice}
+                  rating={product.rating}
+                  reviews={product.reviews}
+                  image={product.image}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </>
   );
 };
