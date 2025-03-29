@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
                     <div className="space-y-4">
                         <h4 className="text-lg leading-5 font-medium">Subscribe</h4>
                         <p className="text-sm leading-5 font-light"> Get 10% off your first order</p>
-                        <div className="flex border border-white w-[85%]">
+                        <div className="flex border border-white w-[100%]">
                             <input
                                 type="email"
                                 placeholder="Enter your email"
