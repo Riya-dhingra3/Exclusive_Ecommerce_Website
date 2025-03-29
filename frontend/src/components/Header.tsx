@@ -19,13 +19,14 @@ const Header = () => {
     <div >
       {/* 🔹 Top Bar */}
       <div className="fixed top-0 left-0 w-full flex flex-wrap justify-evenly items-center bg-black text-white h-8 md:h-10 px-4 z-50">
+        <div className="w-[50%] ml-[20%]">
         <p className="text-xs md:text-sm text-center w-full md:w-auto">
           Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!{" "}
           <span>
             <a href="/" className="font-bold underline">ShopNow</a>
           </span>
         </p>
-
+        </div>
         {/* 🔹 Language Selector */}
         <Box sx={{ minWidth: 100 }}>
           <FormControl fullWidth>

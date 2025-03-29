@@ -294,12 +294,21 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto bg-black w-full relative mt-[10%] mb-[10%] lg:max-w-[85%]">
+      <div className='flex flex-col lg:max-w-[85%] container mx-auto mt-[10%] mb-[10%] '>
+      <div className='flex justify-between items-center'>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Featured</p>
+        </div>
+        <div className="flex justify-between items-center mb-8">
+          <div><h2 className="text-2xl font-bold">New Arrival</h2>
+          </div>
+          </div>
+      <div className=" bg-black w-full relative">
         <Hero_section />
+      </div>
       </div>
       <div className='container mx-auto mt-[8%] lg:max-w-[85%]'>
         <div className='flex justify-between items-center'>
-          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>This Month</p>
+          <p className='text-red-500 font-bold text-1xl border-l-8 border-red-500 rounded-sm pl-[1%]'>Our Products</p>
         </div>
         <div className="flex justify-between items-center mb-8">
           <div><h2 className="text-2xl font-bold">Best Selling Products</h2>
