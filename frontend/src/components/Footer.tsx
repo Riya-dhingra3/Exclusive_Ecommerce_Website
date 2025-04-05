@@ -6,15 +6,15 @@ import AppStore from '../assets/AppStore.jpg';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-black text-white pt-16 pb-4">
-            <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-12">
+        <footer className="bg-black text-white pt-16 pb-4 mt-[4%] bottom-0 max-h-screen">
+            <div className="container lg:max-w-[85%] mx-auto grid grid-cols-1 md:grid-cols-5 gap-12">
                 {/* Exclusive Section */}
                 <div className="space-y-5">
                     <h2 className="text-[24px] leading-[24px] font-semibold">Exclusive</h2>
                     <div className="space-y-4">
                         <h4 className="text-lg leading-5 font-medium">Subscribe</h4>
                         <p className="text-sm leading-5 font-light"> Get 10% off your first order</p>
-                        <div className="flex border border-white w-[85%]">
+                        <div className="flex border border-white w-[100%]">
                             <input
                                 type="email"
                                 placeholder="Enter your email"

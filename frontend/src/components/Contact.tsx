@@ -29,7 +29,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 lg:max-w-[85%]">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm mb-16">
         <span className="text-gray-500">Home</span>
