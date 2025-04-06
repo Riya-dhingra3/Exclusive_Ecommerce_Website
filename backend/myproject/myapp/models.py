@@ -4,28 +4,28 @@ from django.db import models
 class User(models.Model):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, unique=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     password = models.CharField(max_length=128)  # Store hashed password
-    address = models.TextField()
+    address = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.email}"
+        return f"{self.name, self.email, self.phone_number}"
 
 
 class ShippingAddress(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='main_details')
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    street_address = models.CharField(max_length=255)
-    town_city = models.CharField(max_length=150)
-    state = models.CharField(max_length=150)
-    country = models.CharField(max_length=150)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    first_name = models.CharField(max_length=150, null=True, blank=True)
+    last_name = models.CharField(max_length=150, null=True, blank=True)
+    street_address = models.CharField(max_length=255, null=True, blank=True)
+    town_city = models.CharField(max_length=150, null=True, blank=True)
+    state = models.CharField(max_length=150, null=True, blank=True)
+    country = models.CharField(max_length=150, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.user.email})"
@@ -50,7 +50,7 @@ class Product(models.Model):
         related_name='products'
     )
     product_name = models.CharField(max_length=255)
-    discount = models.IntegerField()
+    discount = models.IntegerField(null=True, blank=True)
     current_price = models.IntegerField()
     old_price = models.IntegerField()
     product_image = models.ImageField(upload_to='products/')
@@ -65,7 +65,7 @@ class Product(models.Model):
 class Wishlist(models.Model):
     wishlist_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlist')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='wishlisted_in')
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='wishlisted_in')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -75,9 +75,9 @@ class Wishlist(models.Model):
 class Cart(models.Model):
     cart_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='in_cart')
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='in_cart')
     quantity = models.PositiveIntegerField()
-    added_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.email} - {self.product} (x{self.quantity})"
@@ -86,11 +86,11 @@ class Cart(models.Model):
 class Order(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ordered_in')
-    quantity = models.PositiveIntegerField()
-    total_price = models.IntegerField()
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ordered_in')
+    quantity = models.PositiveIntegerField(null=True, blank=True)
+    total_price = models.IntegerField(null=True, blank=True)
     order_status = models.CharField(max_length=100, default="Success")  # or use choices
-    ordered_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order {self.order_id} by {self.user.email}"
