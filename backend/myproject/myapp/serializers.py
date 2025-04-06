@@ -1,0 +1,50 @@
+from rest_framework import serializers
+from .models import User
+import re
+class SignupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_id', 'name', 'email', 'phone_number', 'password', 'address']
+        extra_kwargs = {
+            'password': {'write_only': True, 'required': True},
+            'name': {'required': True},
+            'email': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'phone_number': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'address': {'required': False, 'allow_null': True, 'allow_blank': True},
+        }
+
+    def validate(self, data):
+        try:
+            email = data.get('email')
+            phone = data.get('phone_number')
+            password = data.get('password')
+            if not email and not phone:
+                raise serializers.ValidationError("Either email or phone_number must be provided.")
+            # Validate email format if provided
+            if email:
+                email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(email_pattern, email):
+                    raise serializers.ValidationError("Invalid email address format.")
+
+            # Validate phone: exactly 10 digits
+            if phone:
+                phone_pattern = r'^\d{10}$'
+                if not re.match(phone_pattern, phone):
+                    raise serializers.ValidationError("Phone number must be exactly 10 digits.")
+
+            # Validate password
+            if password:
+                if len(password) < 8:
+                    raise serializers.ValidationError("Password must be at least 8 characters long.")
+                if not re.search(r'[A-Z]', password):
+                    raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+                if not re.search(r'[a-z]', password):
+                    raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+                if not re.search(r'\d', password):
+                    raise serializers.ValidationError("Password must contain at least one digit.")
+                if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+                    raise serializers.ValidationError("Password must contain at least one special character.")
+            
+            return data
+        except Exception as e:
+            raise serializers.ValidationError(f"Validation error: {str(e)}")

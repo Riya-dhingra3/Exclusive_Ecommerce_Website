@@ -1,8 +1,43 @@
-import React from 'react'
+import React, {useState} from 'react'
 import sideImage from '../assets/side_image.png'
 import Google from '../assets/google.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
+import app from "../../firebaseconfig";
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
+
 const Signup = () => {
+  const navigate = useNavigate();
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+  };
+
+  // Handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google Signed In:", user);
+
+      // TODO: Send user details to backend API if required
+      navigate("/");
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className='flex container lg:max-w-[90%] mt-[4%] justify-between items-center'>
       <div className='hidden md:block w-[50%]'>
@@ -50,7 +85,7 @@ const Signup = () => {
             </div>
 
             {/* Google Signup Button */}
-            <button className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-300">
+            <button className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-300" onClick={handleGoogleSignIn}>
               <img src={Google} alt="Google" width={18} />
               <p className="text-sm">Sign up with Google</p>
             </button>
