@@ -1,4 +1,4 @@
-from myapp.models import User, Category
+from myapp.models import User, Category, Product
 import logging
 import traceback
 import uuid
@@ -61,3 +61,58 @@ def get_categories_schema():
         print(traceback.format_exc())
         logger.error(f"Error in get_categories: {e}")
         return None, 400
+
+
+def check_category_exists(category_id):
+    try:
+        return Category.objects.filter(category_id=category_id).exists()
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in check_category_exists: {e}")
+        return False
+
+
+def get_category_id(category_name):
+    try:
+        return Category.objects.filter(category_name=category_name).values('category_id')
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in get_category_id: {e}")
+        return None
+
+def create_product_schema(data):
+    try:
+        product = Product.objects.create(
+            product_id=str(uuid.uuid4()),
+            category=data.get('category'),
+            product_name=data.get('product_name'),
+            discount=data.get('discount'),
+            current_price=data.get('current_price'),
+            old_price=data.get('old_price'),
+            product_image=data.get('product_image')
+        )
+        if product:
+            return 200
+        return 400
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in create_product: {e}")
+        return 400
+
+
+def get_products_schema(product_id=None, category_id=None):
+    try:
+        if product_id:
+            response_data=Product.objects.filter(product_id=product_id).values('product_id', 'category', 'product_name', 'discount', 'current_price', 'old_price', 'product_image')
+        elif category_id:
+            response_data=Product.objects.filter(category=category_id).values('product_id', 'category', 'product_name', 'discount', 'current_price', 'old_price', 'product_image')
+        else:
+            response_data=Product.objects.all().values('product_id', 'category', 'product_name', 'discount', 'current_price', 'old_price', 'product_image')
+        if response_data:
+            return response_data, 200
+        return None, 400
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in get_products_schema: {e}")
+        return None, 400
+

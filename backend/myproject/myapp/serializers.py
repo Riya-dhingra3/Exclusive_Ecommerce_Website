@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Category
+from .models import User, Category, Product
 import re
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,3 +64,22 @@ class CategorySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Category name is required.")
         return data
     
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['product_id', 'category', 'product_name', 'discount', 'current_price', 'old_price', 'product_image']
+        extra_kwargs = {
+            'product_name': {'required': True},
+            'category': {'required': True},
+            'current_price': {'required': True},
+            'old_price': {'required': True},
+            'product_image': {'required': True},
+            'discount': {'required': False},
+        }
+        
+    def validate(self, data):
+        if data['current_price'] > data['old_price']:
+            raise serializers.ValidationError("Current price cannot be greater than old price.")
+        return data
+

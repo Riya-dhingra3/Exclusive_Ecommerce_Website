@@ -3,7 +3,11 @@ from rest_framework import status
 from .schema import (check_user_exists, 
                      create_user_schema, 
                      create_category_schema,
-                     get_categories_schema)
+                     get_categories_schema,
+                     check_category_exists,
+                     create_product_schema,
+                     get_products_schema,
+                     get_category_id)
 from django.contrib.auth.hashers import make_password
 from .models import User
 import jwt
@@ -16,6 +20,7 @@ def create_user(data, user_id):
         response= check_user_exists(data.get('email'), data.get('phone_number'))
         if response:
             return Response({
+                "status": "false",
                 "error_code": "50002",
                 "message": "User already exists",
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -38,6 +43,7 @@ def create_user(data, user_id):
         response=create_user_schema(data, user_id)
         if response==200:
             return Response({
+                "status": "true",
                 "message": "User created successfully",
                 "user_id": str(user_id),
                 "access_token": access_token,
@@ -45,15 +51,17 @@ def create_user(data, user_id):
             }, status=status.HTTP_201_CREATED)
         else:
             return Response({
+                "status": "false",
                 "error_code": "50003",
                 "message": "User creation failed",
             }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(traceback.format_exc()) 
         return Response({
-                "error_code": "50001",
-                "message": str(e),
-            }, status=status.HTTP_400_BAD_REQUEST)
+            "status": "false",
+            "error_code": "50001",
+            "message": str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 def create_category(data):
@@ -61,16 +69,19 @@ def create_category(data):
         response=create_category_schema(data)
         if response==200:
             return Response({
+                "status": "true",
                 "message": "Category created successfully",
             }, status=status.HTTP_201_CREATED)
         else:
             return Response({
+                "status": "false",
                 "error_code": "50004",
                 "message": "Category creation failed",
             }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(traceback.format_exc())
         return Response({
+            "status": "false",
             "error_code": "50001",
             "message": str(e),
         }, status=status.HTTP_400_BAD_REQUEST)
@@ -81,16 +92,82 @@ def get_categories():
         response_data, response_status=get_categories_schema()
         if response_status==200:
             return Response({
+                "status": "true",
                 "categories": response_data
             }, status=status.HTTP_200_OK)
         else:
             return Response({
+                "status": "false",
                 "error_code": "50005",
                 "message": "Categories retrieval failed",
             }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(traceback.format_exc())
         return Response({
+            "status": "false",
+            "error_code": "50001",
+            "message": str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_product(data):
+    try:
+        category_id=data.get('category')
+        response=check_category_exists(category_id)
+        if not response:
+            return Response({
+                "status": "false",
+                "error_code": "50007",
+                "message": "Category does not exist",
+            }, status=status.HTTP_400_BAD_REQUEST)
+        response=create_product_schema(data)
+        if response==200:
+            return Response({
+                "status": "true",
+                "message": "Product created successfully",
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response({
+                "status": "false",
+                "error_code": "50006",
+                "message": "Product creation failed",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(traceback.format_exc())
+        return Response({
+            "status": "false",
+            "error_code": "50001",
+            "message": str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_products(product_id=None, category_id=None, category_name=None):
+    try:
+        if category_name:
+            category_id=get_category_id(category_name)
+            if not category_id:
+                return Response({
+                "status": "false",
+                "error_code": "50008",
+                "message": "Category does not exist",
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        response_data, response_status=get_products_schema(product_id, category_id)
+        if response_status==200:
+            return Response({
+                "status": "true",
+                "products": response_data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "status": "false",
+                "error_code": "50009",
+                "message": "Products retrieval failed",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(traceback.format_exc())
+        return Response({
+            "status": "false",
             "error_code": "50001",
             "message": str(e),
         }, status=status.HTTP_400_BAD_REQUEST)
