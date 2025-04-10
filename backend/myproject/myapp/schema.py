@@ -1,6 +1,8 @@
-from myapp.models import User
+from myapp.models import User, Category
 import logging
 import traceback
+import uuid
+
 
 logger = logging.getLogger(__name__)
 def check_user_exists(email=None, phone_number=None):
@@ -33,3 +35,29 @@ def create_user_schema(data, user_id):
         logger.error(f"Error in create_user: {e}")
         return 400
 
+
+def create_category_schema(data):
+    try:
+        category = Category.objects.create(
+            category_id=str(uuid.uuid4()),
+            category_name=data.get('category_name')
+        )
+        if category:
+            return 200
+        return 400
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in create_category: {e}")
+        return 400
+
+
+def get_categories_schema():
+    try:
+        categories = Category.objects.all().values('category_id', 'category_name')
+        if categories:
+            return list(categories), 200
+        return None, 400
+    except Exception as e:
+        print(traceback.format_exc())
+        logger.error(f"Error in get_categories: {e}")
+        return None, 400

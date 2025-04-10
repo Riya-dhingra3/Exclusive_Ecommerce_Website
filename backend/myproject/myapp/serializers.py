@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Category
 import re
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,3 +48,19 @@ class SignupSerializer(serializers.ModelSerializer):
             return data
         except Exception as e:
             raise serializers.ValidationError(f"Validation error: {str(e)}")
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['category_id', 'category_name']
+        extra_kwargs = {
+            'category_name': {'required': True}
+        }
+
+    def validate(self, data):
+        category_name = data.get('category_name')
+        if not category_name:
+            raise serializers.ValidationError("Category name is required.")
+        return data
+    

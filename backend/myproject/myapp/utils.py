@@ -1,6 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import status
-from .schema import check_user_exists, create_user_schema
+from .schema import (check_user_exists, 
+                     create_user_schema, 
+                     create_category_schema,
+                     get_categories_schema)
 from django.contrib.auth.hashers import make_password
 from .models import User
 import jwt
@@ -51,3 +54,44 @@ def create_user(data, user_id):
                 "error_code": "50001",
                 "message": str(e),
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_category(data):
+    try:
+        response=create_category_schema(data)
+        if response==200:
+            return Response({
+                "message": "Category created successfully",
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response({
+                "error_code": "50004",
+                "message": "Category creation failed",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(traceback.format_exc())
+        return Response({
+            "error_code": "50001",
+            "message": str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_categories():
+    try:
+        response_data, response_status=get_categories_schema()
+        if response_status==200:
+            return Response({
+                "categories": response_data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "error_code": "50005",
+                "message": "Categories retrieval failed",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(traceback.format_exc())
+        return Response({
+            "error_code": "50001",
+            "message": str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
+
