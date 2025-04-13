@@ -9,7 +9,6 @@ from .schema import (check_user_exists,
                      get_products_schema,
                      get_category_id)
 from django.contrib.auth.hashers import make_password
-from .models import User
 import jwt
 from django.conf import settings
 from datetime import datetime, timedelta
@@ -112,7 +111,7 @@ def get_categories():
 
 def create_product(data):
     try:
-        category_id=data.get('category')
+        category_id=data.get('category_id')
         response=check_category_exists(category_id)
         if not response:
             return Response({
@@ -141,7 +140,7 @@ def create_product(data):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-def get_products(product_id=None, category_id=None, category_name=None):
+def get_products(request,product_id=None, category_id=None, category_name=None, page=1, page_size=10):
     try:
         if category_name:
             category_id=get_category_id(category_name)
@@ -154,9 +153,19 @@ def get_products(product_id=None, category_id=None, category_name=None):
 
         response_data, response_status=get_products_schema(product_id, category_id)
         if response_status==200:
+            total = len(response_data)
+            start = (page - 1) * page_size
+            end = start + page_size
+            data = response_data[start:end]
+            for item in data:
+                if 'product_image' in item and request:
+                   item['product_image'] = request.build_absolute_uri('/media/' + item['product_image'])
             return Response({
                 "status": "true",
-                "products": response_data
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "products": data
             }, status=status.HTTP_200_OK)
         else:
             return Response({

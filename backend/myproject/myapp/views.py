@@ -95,6 +95,7 @@ class ProductView(APIView):
         
         try:
             data = serializer.validated_data
+            print("sddd",data)
             secret_key = request.headers.get('secret-key')  
             if not secret_key or secret_key != os.getenv('API_KEY'):
                 return Response({
@@ -126,7 +127,9 @@ class ProductView(APIView):
             product_id = request.query_params.get('product_id')
             category_id = request.query_params.get('category_id')
             category_name=request.query_params.get('category_name')
-            response=get_products(product_id, category_id, category_name)
+            page=request.query_params.get('page',1)
+            page_size=request.query_params.get('page_size',10)
+            response=get_products(request,product_id, category_id, category_name, page, page_size)
             return response
         except Exception as e:
             print(traceback.format_exc())

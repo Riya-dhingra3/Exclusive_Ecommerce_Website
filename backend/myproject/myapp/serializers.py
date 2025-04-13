@@ -66,12 +66,12 @@ class CategorySerializer(serializers.ModelSerializer):
     
 
 class ProductSerializer(serializers.ModelSerializer):
+    category_id = serializers.UUIDField(required=True)
     class Meta:
         model = Product
-        fields = ['product_id', 'category', 'product_name', 'discount', 'current_price', 'old_price', 'product_image']
+        fields = ['product_id', 'category_id', 'product_name', 'discount', 'current_price', 'old_price', 'product_image']
         extra_kwargs = {
             'product_name': {'required': True},
-            'category': {'required': True},
             'current_price': {'required': True},
             'old_price': {'required': True},
             'product_image': {'required': True},

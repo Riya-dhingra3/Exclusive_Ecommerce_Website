@@ -65,7 +65,11 @@ def get_categories_schema():
 
 def check_category_exists(category_id):
     try:
-        return Category.objects.filter(category_id=category_id).exists()
+        response=Category.objects.filter(category_id=category_id).exists() 
+        print("sddd",response)
+        if response:
+            return True
+        return False
     except Exception as e:
         print(traceback.format_exc())
         logger.error(f"Error in check_category_exists: {e}")
@@ -74,7 +78,10 @@ def check_category_exists(category_id):
 
 def get_category_id(category_name):
     try:
-        return Category.objects.filter(category_name=category_name).values('category_id')
+        response=Category.objects.filter(category_name=category_name).values('category_id')
+        if response:
+            return response[0]['category_id']
+        return None
     except Exception as e:
         print(traceback.format_exc())
         logger.error(f"Error in get_category_id: {e}")
@@ -84,7 +91,7 @@ def create_product_schema(data):
     try:
         product = Product.objects.create(
             product_id=str(uuid.uuid4()),
-            category=data.get('category'),
+            category_id=data.get('category_id'),
             product_name=data.get('product_name'),
             discount=data.get('discount'),
             current_price=data.get('current_price'),
