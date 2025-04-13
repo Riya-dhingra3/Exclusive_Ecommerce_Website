@@ -95,7 +95,6 @@ class ProductView(APIView):
         
         try:
             data = serializer.validated_data
-            print("sddd",data)
             secret_key = request.headers.get('secret-key')  
             if not secret_key or secret_key != os.getenv('API_KEY'):
                 return Response({

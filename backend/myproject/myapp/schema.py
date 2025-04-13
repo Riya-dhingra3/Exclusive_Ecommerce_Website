@@ -65,8 +65,7 @@ def get_categories_schema():
 
 def check_category_exists(category_id):
     try:
-        response=Category.objects.filter(category_id=category_id).exists() 
-        print("sddd",response)
+        response=Category.objects.filter(category_id=category_id).exists()
         if response:
             return True
         return False
