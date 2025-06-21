@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
-from .schema import check_user_exists, create_user_schema
+from .schema import check_user_exists, create_user_schema, check_password
 from django.contrib.auth.hashers import make_password
 from .models import User
 import jwt
@@ -51,3 +51,55 @@ def create_user(data, user_id):
                 "error_code": "50001",
                 "message": str(e),
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+def login_api(email,phone,password):
+    try:
+        identifier = email if email else phone
+        user = check_password(email, phone, password)
+
+        if not user:
+            return Response({
+                "status":"false",
+                "error_code": "50002",
+                "message": "Invalid credentials"
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+        access_token = jwt.encode(
+            {"user_id": str(user.user_id), 
+            "type": "access", 
+            "exp": datetime.utcnow() + timedelta(minutes=30)},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
+
+
+        refresh_token = jwt.encode(
+            {"user_id": str(user.user_id), "type": "refresh", "exp": datetime.utcnow() + timedelta(days=7)},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
+
+
+        return Response({
+            "status":"true",
+            "message":"Login Successful",
+            "user_id":str(user.user_id),
+            "name":user.name,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        },status=status.HTTP_200_OK)
+
+
+
+    except Exception as e:
+        print(traceback.format_exc())
+        return Response({
+            "status":"false",
+            "error_code": "50001",
+            "message": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
