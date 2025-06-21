@@ -1,6 +1,19 @@
+# User Hits API (e.g., POST /signup)
+#         ↓
+# urls.py → matches route
+#         ↓
+# views.py → handles request
+#         ↓
+# serializers.py → validates and saves data
+#         ↓
+# models.py → interacts with DB
+#         ↓
+# utils.py (optional) → extra logic
+
 from rest_framework import serializers
 from .models import User, Category, Product
 import re
+
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -18,15 +31,15 @@ class SignupSerializer(serializers.ModelSerializer):
             email = data.get('email')
             phone = data.get('phone_number')
             password = data.get('password')
+
             if not email and not phone:
                 raise serializers.ValidationError("Either email or phone_number must be provided.")
-            # Validate email format if provided
+
             if email:
                 email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
                 if not re.match(email_pattern, email):
                     raise serializers.ValidationError("Invalid email address format.")
 
-            # Validate phone: exactly 10 digits
             if phone:
                 phone_pattern = r'^\d{10}$'
                 if not re.match(phone_pattern, phone):
