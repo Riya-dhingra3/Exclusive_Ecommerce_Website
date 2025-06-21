@@ -11,7 +11,7 @@
 # utils.py (optional) → extra logic
 
 from rest_framework import serializers
-from .models import User
+from .models import User, Category, Product
 import re
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -45,6 +45,7 @@ class SignupSerializer(serializers.ModelSerializer):
                 if not re.match(phone_pattern, phone):
                     raise serializers.ValidationError("Phone number must be exactly 10 digits.")
 
+            # Validate password
             if password:
                 if len(password) < 8:
                     raise serializers.ValidationError("Password must be at least 8 characters long.")
@@ -62,35 +63,36 @@ class SignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Validation error: {str(e)}")
 
 
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['user_id', 'name', 'email', 'phone_number', 'password', 'address']
+        model = Category
+        fields = ['category_id', 'category_name']
         extra_kwargs = {
-            'password': {'write_only': True, 'required': True},
-            'email': {'required': False, 'allow_null': True, 'allow_blank': True},
-            'phone_number': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'category_name': {'required': True}
         }
 
     def validate(self, data):
-        print(data)
-        try:
-            email = data.get('email')
-            phone = data.get('phone_number')
-            password = data.get('password')
-            print(email,phone,password)
+        category_name = data.get('category_name')
+        if not category_name:
+            raise serializers.ValidationError("Category name is required.")
+        return data
+    
 
-            if password:
-                if len(password) < 8:
-                    raise serializers.ValidationError("Password must be at least 8 characters long.")
-                if not re.search(r'[A-Z]', password):
-                    raise serializers.ValidationError("Password must contain at least one uppercase letter.")
-                if not re.search(r'[a-z]', password):
-                    raise serializers.ValidationError("Password must contain at least one lowercase letter.")
-                if not re.search(r'\d', password):
-                    raise serializers.ValidationError("Password must contain at least one digit.")
-                if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-                    raise serializers.ValidationError("Password must contain at least one special character.")
+class ProductSerializer(serializers.ModelSerializer):
+    category_id = serializers.UUIDField(required=True)
+    class Meta:
+        model = Product
+        fields = ['product_id', 'category_id', 'product_name', 'discount', 'current_price', 'old_price', 'product_image']
+        extra_kwargs = {
+            'product_name': {'required': True},
+            'current_price': {'required': True},
+            'old_price': {'required': True},
+            'product_image': {'required': True},
+            'discount': {'required': False},
+        }
+        
+    def validate(self, data):
+        if data['current_price'] > data['old_price']:
+            raise serializers.ValidationError("Current price cannot be greater than old price.")
+        return data
 
-            return data
-        except Exception as e:
-            raise serializers.ValidationError(f"Validation error: {str(e)}")
