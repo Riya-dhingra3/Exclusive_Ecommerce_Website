@@ -142,18 +142,17 @@ class ProductView(APIView):
 class LoginView(APIView):
     def post(self, request):
         try:
-            email = request.data.get('email')
-            phone = request.data.get('phone_number')
+            email_or_phone = request.data.get('email_or_phone')
             password = request.data.get('password')
 
-            if (not email and not phone) or (not password):
+            if (not email_or_phone) or (not password):
                 return Response({
                     "status":"false",
                     "error_code":"50001",
                     "message": "Please provide the essential details",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            response = login_api(email, phone, password)
+            response = login_api(email_or_phone, password)
             return response
 
         except Exception as e:

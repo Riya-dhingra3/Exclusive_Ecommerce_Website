@@ -123,12 +123,11 @@ def get_products_schema(product_id=None, category_id=None):
         return None, 400
 
 
-def check_password(email=None, phone=None, password=None):
+def check_password(email_or_phone=None, password=None):
     try:
-        if email:
-            user = User.objects.filter(email=email).first()
-        else:
-            user = User.objects.filter(phone_number=phone).first()
+        user = User.objects.filter(email=email_or_phone).first()
+        if not user:
+            user = User.objects.filter(phone_number=email_or_phone).first()
 
         if user and django_check_password(password, user.password):
             return user

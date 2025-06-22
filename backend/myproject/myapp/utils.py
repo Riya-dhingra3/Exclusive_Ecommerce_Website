@@ -182,9 +182,9 @@ def get_products(request,product_id=None, category_id=None, category_name=None, 
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-def login_api(email,phone,password):
+def login_api(email_or_phone,password):
     try:
-        user = check_password(email, phone, password)
+        user = check_password(email_or_phone, password)
 
         if not user:
             return Response({
