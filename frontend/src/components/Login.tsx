@@ -19,6 +19,7 @@ const Login = () => {
         email_or_phone,
         password,
       });
+      console.log(res)
 
       const { user_id, name, email, phone_number, access_token, refresh_token } = res.data;
 

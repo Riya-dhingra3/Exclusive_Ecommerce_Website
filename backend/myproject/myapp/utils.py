@@ -45,6 +45,9 @@ def create_user(data, user_id):
                 "status": "true",
                 "message": "User created successfully",
                 "user_id": str(user_id),
+                "name": data.get('name'),
+                "email": data.get('email'),
+                "phone_number": data.get('phone_number'),
                 "access_token": access_token,
                 "refresh_token": refresh_token
             }, status=status.HTTP_201_CREATED)

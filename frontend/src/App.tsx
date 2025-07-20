@@ -9,11 +9,13 @@ import Wishlist from './components/Wishlist';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './components/Login';
+import ScrollToTop from './components/Scrolltotop';
 
 function App() {
   return (
     <>
       <Header />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

@@ -3,26 +3,21 @@ import sideImage from '../assets/side_image.png'
 import Google from '../assets/google.png'
 import { Link, useNavigate} from 'react-router-dom'
 import app from "../../firebaseconfig";
+import { useAuth } from '../context/Authcontext'
+const api_url= import.meta.env.VITE_API_URL
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
+import axios from 'axios';
 
 const Signup = () => {
   const navigate = useNavigate();
   const auth = getAuth(app);
+  const {login} = useAuth()
   const provider = new GoogleAuthProvider();
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [inputname, setInputName] = useState("");
+  const [inputemail, setInputEmail] = useState("");
+  const [inputphone_number, setInputPhone_number] = useState("");
+  const [inputpassword, setInputPassword] = useState("");
   const [error, setError] = useState("");
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-  };
 
   // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
@@ -37,6 +32,26 @@ const Signup = () => {
       setError(err.message);
     }
   };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${api_url}signup/`, {
+        name: inputname,
+        email: inputemail,
+        phone_number: inputphone_number,
+        password: inputpassword,
+    });
+
+      const { user_id, name, email, phone_number, access_token, refresh_token } = res.data;
+
+      login({ user_id, name, email, phone_number }, access_token, refresh_token);
+      navigate('/')
+    } catch (err) {
+      console.error("Signup error", err);
+    }
+  };
+  
 
   return (
     <div className='flex container lg:max-w-[90%] mt-[4%] justify-between items-center'>
@@ -59,23 +74,37 @@ const Signup = () => {
               className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
               placeholder="Name"
+              onChange={(e) => setInputName(e.target.value)}
+              value={inputname}
               required
             />
             <input
               className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="email"
-              placeholder="Email or Phone Number"
+              placeholder="Email"
+              onChange={(e) => setInputEmail(e.target.value)}
+              value={inputemail}
+              required
+            />
+            <input
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="number"
+              placeholder="Phone Number"
+              onChange={(e) => setInputPhone_number(e.target.value)}
+              value={inputphone_number}
               required
             />
             <input
               className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="password"
               placeholder="Password"
+              onChange={(e) => setInputPassword(e.target.value)}
+              value={inputpassword}
               required
             />
 
             {/* Create Account Button */}
-            <button className="w-full bg-red-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-red-400 transition-all duration-300">
+            <button className="w-full bg-red-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-red-400 transition-all duration-300" onClick={handleSignup}>
               Create Account
             </button>
 
